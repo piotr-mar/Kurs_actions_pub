@@ -7,17 +7,15 @@ variable "subnet" {
   type    = string
 }
 variable "name" {
-  default = "t3.micro"
+  default = ""
   type    = string
 }
-
-data "aws_subnet" {
- filter {
-    name   = "tag:name"
+data "aws_subnet" "subnet" {
+  filter {
+    name   = "tag:Name"
     values = ["${var.subnet}"]
   }
 }
-
 data "aws_ami" "ubuntu" {
   most_recent = true
   filter {
@@ -35,6 +33,6 @@ resource "aws_instance" "web" {
   instance_type = var.instance_type
   subnet_id     = data.aws_subnet.subnet.id
   tags = {
-    Name = "HelloWorld"
+    Name = "${var.name}"
   }
 }
